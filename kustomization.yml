@@ -1,0 +1,23 @@
+kind: Kustomization
+resources:
+  - configmap.yml
+  - deployment.yml
+  - ingress.yml
+  - service.yml
+commonLabels:
+  app: bitwarden
+patchesJson6902:
+  - path: ingress_patch.yml
+    target:
+      group: extensions
+      kind: Ingress
+      name: bitwarden
+      version: v1beta1
+namespace: bitwarden
+secretGenerator:
+  - name: bitwarden
+    behavior: create
+    env: prod.env
+images:
+  - name: bitwardenrs/server
+    newTag: 1.16.3
